@@ -130,6 +130,8 @@ extern CGFloat const JTSImageViewController_DefaultBackgroundBlurRadius;
 
 - (UIColor *)accentColorForAltTextInImageViewer:(JTSImageViewController *)imageView;
 
+- (BOOL)imageViewerShouldRespondToDoubleTap:(JTSImageViewController *)imageViewer;
+
 @end
 
 ///-------------------------------------------------------------------------------
