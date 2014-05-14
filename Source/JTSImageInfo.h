@@ -17,6 +17,7 @@
 @property (copy, nonatomic) NSString *altText;
 @property (copy, nonatomic) NSString *title;
 @property (assign, nonatomic) CGRect referenceRect;
+@property (nonatomic) UIViewContentMode contentMode;
 @property (strong, nonatomic) UIView *referenceView;
 @property (copy, nonatomic) NSMutableDictionary *userInfo;
 

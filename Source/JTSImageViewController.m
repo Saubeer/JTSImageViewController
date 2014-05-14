@@ -317,7 +317,7 @@ CGFloat const JTSImageViewController_MinimumFlickDismissalVelocity = 800.0f;
     [self.view addSubview:self.scrollView];
     
     self.imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView.contentMode = self.imageInfo.contentMode;
     self.imageView.isAccessibilityElement = NO;
     self.imageView.clipsToBounds = YES;
     
