@@ -16,7 +16,7 @@
     dispatch_once(&once, ^ {
         NSString *key = @"UIViewControllerBasedStatusBarAppearance";
         id object = [[NSBundle mainBundle] objectForInfoDictionaryKey:key];
-        viewControllerBased = [object boolValue];
+        viewControllerBased = object?[object boolValue]:YES;
     });
     return viewControllerBased;
 }
