@@ -1044,11 +1044,22 @@ typedef struct {
 
 #pragma mark - Snapshots
 
+// Workaround for iOS7 when running an iPhone targeted app on an iPad
+// see www.openradar.me/15909891
+- (BOOL)takeSnapshotAfterUpdates {
+    static dispatch_once_t once;
+    static BOOL isIpad;
+    dispatch_once(&once, ^ {
+        isIpad = [(NSString*)[UIDevice currentDevice].model hasPrefix:@"iPad"];
+    });
+    return !isIpad;
+}
+
 - (UIView *)snapshotFromParentmostViewController:(UIViewController *)viewController {
     
     UIViewController *presentingViewController = viewController.view.window.rootViewController;
     while (presentingViewController.presentedViewController) presentingViewController = presentingViewController.presentedViewController;
-    UIView *snapshot = [presentingViewController.view snapshotViewAfterScreenUpdates:YES];
+    UIView *snapshot = [presentingViewController.view snapshotViewAfterScreenUpdates:[self takeSnapshotAfterUpdates]];
     [snapshot setClipsToBounds:NO];
     return snapshot;
 }
@@ -1076,7 +1087,7 @@ typedef struct {
     UIGraphicsBeginImageContextWithOptions(scaledBounds.size, YES, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextConcatCTM(context, CGAffineTransformMakeTranslation(scaledOuterBleed, scaledOuterBleed));
-    [presentingViewController.view drawViewHierarchyInRect:scaledDrawingArea afterScreenUpdates:YES];
+    [presentingViewController.view drawViewHierarchyInRect:scaledDrawingArea afterScreenUpdates:[self takeSnapshotAfterUpdates]];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
