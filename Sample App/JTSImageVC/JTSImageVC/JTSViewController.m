@@ -11,6 +11,8 @@
 #import "JTSImageViewController.h"
 #import "JTSImageInfo.h"
 
+#define TRY_AN_ANIMATED_GIF 0
+
 @interface JTSViewController ()
 
 @end
@@ -19,8 +21,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.bigImageButton addTarget:self action:@selector(bigButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] init];
+    [tapRecognizer addTarget:self action:@selector(bigButtonTapped:)];
+    [self.bigImageButton addGestureRecognizer:tapRecognizer];
     [self.bigImageButton setAccessibilityLabel:@"Photo of a cat wearing a Bane costume."];
+    self.bigImageButton.layer.cornerRadius = self.bigImageButton.bounds.size.width/2.0f;
 }
 
 - (NSUInteger)supportedInterfaceOrientations {
@@ -31,15 +36,21 @@
     
     // Create image info
     JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
-    imageInfo.image = [self.bigImageButton backgroundImageForState:UIControlStateNormal];
+#if TRY_AN_ANIMATED_GIF == 1
+    imageInfo.imageURL = [NSURL URLWithString:@"http://media.giphy.com/media/O3QpFiN97YjJu/giphy.gif"];
+#else
+    imageInfo.image = self.bigImageButton.image;
+#endif
     imageInfo.referenceRect = self.bigImageButton.frame;
     imageInfo.referenceView = self.bigImageButton.superview;
+    imageInfo.referenceContentMode = self.bigImageButton.contentMode;
+    imageInfo.referenceCornerRadius = self.bigImageButton.layer.cornerRadius;
     
     // Setup view controller
     JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
                                            initWithImageInfo:imageInfo
                                            mode:JTSImageViewControllerMode_Image
-                                           backgroundStyle:JTSImageViewControllerBackgroundStyle_ScaledDimmedBlurred];
+                                           backgroundStyle:JTSImageViewControllerBackgroundOption_Scaled];
     
     // Present the view controller.
     [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOriginalPosition];
